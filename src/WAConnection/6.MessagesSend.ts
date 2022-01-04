@@ -409,11 +409,28 @@ export class WAConnection extends Base {
         const downloadMediaMessage = async () => {
             const stream = await decryptMediaMessageBuffer(mContent)
             if(type === 'buffer') {
-                let buffer = Buffer.from([])
-                for await(const chunk of stream) {
-                    buffer = Buffer.concat([buffer, chunk])
+                async function createBuffer() {
+                    let buffer = Buffer.from([]);
+                    for await (const chunk of stream) {
+                        buffer = Buffer.concat([buffer, chunk]);
+                    }
+                    return buffer
                 }
-                return buffer
+
+                const bufferRes = await Promise.race([
+                    createBuffer(), 
+                    new Promise((res) => setTimeout(() => res(null), 1500))
+                ])
+
+                if (bufferRes === null) {
+                    if (count < 5) {
+                        console.log('Did not finish in 1500ms. Number of tries', count)
+                        return await downloadMediaMessage(count + 1)
+                    }
+                    console.log('Exceeded tries')
+                }
+
+                return bufferRes
             }
             return stream
         }
@@ -443,6 +460,10 @@ export class WAConnection extends Base {
         const extension = extensionForMediaMessage (message.message)
         const trueFileName = attachExtension ? (filename + '.' + extension) : filename
         const buffer = await this.downloadMediaMessage(message)
+
+        if (buffer === null) {
+            return null
+        }
         
         await fs.writeFile(trueFileName, buffer)
         return trueFileName
