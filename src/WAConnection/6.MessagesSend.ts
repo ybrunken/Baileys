@@ -406,7 +406,7 @@ export class WAConnection extends Base {
         let mContent = message.message?.ephemeralMessage?.message || message.message
         if (!mContent) throw new BaileysError('No message present', { status: 400 })
 
-        const downloadMediaMessage = async () => {
+        const downloadMediaMessage = async (count = 0) => {
             const stream = await decryptMediaMessageBuffer(mContent)
             if(type === 'buffer') {
                 async function createBuffer() {
