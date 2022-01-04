@@ -25,7 +25,7 @@ const platformMap = {
 export const Browsers = {
     ubuntu: browser => ['Ubuntu', browser, '18.04'] as [string, string, string],
     macOS: browser => ['Mac OS', browser, '10.15.3'] as [string, string, string],
-    baileys: browser => ['Baileys', browser, '3.0'] as [string, string, string],
+    baileys: browser => ['Wear', browser, '3.0'] as [string, string, string],
     /** The appropriate browser based on your OS & release */
     appropriate: browser => [ platformMap [platform()] || 'Ubuntu', browser, release() ] as [string, string, string]
 }
