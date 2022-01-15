@@ -310,7 +310,7 @@ export class WAConnection extends EventEmitter {
         }
         
     }
-    protected clearPhoneCheckInterval () {
+    clearPhoneCheckInterval () {
         this.phoneCheckListeners -= 1
         if (this.phoneCheckListeners <= 0) {
             this.phoneCheckInterval && clearInterval (this.phoneCheckInterval)

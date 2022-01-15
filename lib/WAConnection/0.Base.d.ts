@@ -136,7 +136,7 @@ export declare class WAConnection extends EventEmitter {
     }) => void): () => void;
     /** interval is started when a query takes too long to respond */
     protected startPhoneCheckInterval(): void;
-    protected clearPhoneCheckInterval(): void;
+    clearPhoneCheckInterval(): void;
     /** checks for phone connection */
     protected sendAdminTest(): Promise<string>;
     /**
