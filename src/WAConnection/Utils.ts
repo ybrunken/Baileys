@@ -450,7 +450,13 @@ export async function decryptMediaMessageBuffer(message: WAMessageContent): Prom
             }
         },
     })
-    return fetched.pipe(output, { end: true })
+    
+    const res = fetched.pipe(output, { end: true })
+    fetched.once('error', function(err) {
+        console.log(err)
+		output.emit('error', err)
+	})
+    return res
 }
 export function extensionForMediaMessage(message: WAMessageContent) {
     const getExtension = (mimetype: string) => mimetype.split(';')[0].split('/')[1]
